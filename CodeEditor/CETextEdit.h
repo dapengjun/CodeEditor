@@ -13,6 +13,7 @@ public:
     ~CETextEdit();
 
     bool save();      // 保存操作
+    bool loadFile();
 
     QString &getFileName();
     void setFileName(QString &fileName);

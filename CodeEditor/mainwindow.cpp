@@ -12,8 +12,9 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->setupUi(this);
     ui->tabWidget->setMovable(true);
     ui->tabWidget->setTabsClosable(false);
-    fileName = "untitled";
-    loadFile(fileName, true);
+//    fileName = "untitled";
+//    loadFile(fileName, true);
+    ui->dockWidget->setVisible(false);
 }
 
 MainWindow::~MainWindow()
@@ -43,6 +44,7 @@ bool MainWindow::loadFile(QString &fileName, bool isNew)
         textEdit->setFileName(fileName);
         tabTitle = textEdit->getTabTitle();
         index = ui->tabWidget->addTab(textEdit, tabTitle);
+        textEdit->loadFile();
         ui->tabWidget->setCurrentIndex(index);
         ui->tabWidget->setTabEnabled(index, true);
         ui->tabWidget->setTabToolTip(index, fileName);
@@ -102,13 +104,25 @@ bool MainWindow::saveAs()
     return ret;
 }
 
-bool MainWindow::save()
+bool MainWindow::save(int index)
 {
     bool ret = true;
     CETextEdit *textEdit = NULL;
 
-    textEdit = (CETextEdit *)ui->tabWidget->currentWidget();
+    if (index >= 0)
+    {
+        textEdit = (CETextEdit *)ui->tabWidget->widget(index);
+    }
+    else
+    {
+        textEdit = (CETextEdit *)ui->tabWidget->currentWidget();
+    }
+    if (!textEdit)
+    {
+        return false;
+    }
     if (textEdit->isUntitled())
+
     {
         QString fileName = QFileDialog::getSaveFileName(this,
                                               tr("Save As"));
@@ -134,8 +148,8 @@ bool MainWindow::closeTab(int index)
 {
     if (maybeSave())
     {
-        QTextEdit *textEdit = NULL;
-        textEdit = (QTextEdit *)ui->tabWidget->widget(index);
+        CETextEdit *textEdit = NULL;
+        textEdit = (CETextEdit *)ui->tabWidget->widget(index);
         ui->tabWidget->removeTab(index);
         delete textEdit;
     }
@@ -194,4 +208,41 @@ void MainWindow::on_aQuit_triggered()
 {
     on_aCloseAllFile_triggered();
     mApp->quit();
+}
+
+void MainWindow::on_aOpenFile_triggered()
+{
+    if (maybeSave()) {
+        QString fileName = QFileDialog::getOpenFileName(this);
+
+        // 如果文件名不为空，则加载文件
+        if (!fileName.isEmpty()) {
+             loadFile(fileName, false);
+        }
+    }
+}
+
+void MainWindow::closeEvent(QCloseEvent *event)
+{
+   // 如果maybeSave()函数返回true，则关闭程序
+   if (maybeSave()) {
+       event->accept();
+   } else {   // 否则忽略该事件
+       event->ignore();
+   }
+}
+
+void MainWindow::on_aSaveAll_triggered()
+{
+    int count = ui->tabWidget->count();
+
+    for (int i=count-1;i>=0;i--)
+    {
+        save(i);
+    }
+}
+
+void MainWindow::on_aOpenFolder_triggered()
+{
+
 }

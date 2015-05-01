@@ -5,6 +5,7 @@
 #include "CEFile.h"
 #include <QMap>
 #include <QTextEdit>
+#include <QCloseEvent>
 
 namespace Ui {
 class MainWindow;
@@ -20,12 +21,15 @@ public:
 
     void newFile();   // 新建操作
     bool loadFile(QString &fileName, bool isNew);
-    bool save();      // 保存操作
+    bool save(int index = -1);      // 保存操作
     bool saveAs();    // 另存为操作
     bool maybeSave();
     bool closeTab(int index);
 
     void setApp(QApplication *app);
+
+protected:
+    void closeEvent(QCloseEvent *event); // 关闭事件
 
 private slots:
     void on_aNewFile_triggered();
@@ -43,6 +47,12 @@ private slots:
     void on_aCloseAllFile_triggered();
 
     void on_aQuit_triggered();
+
+    void on_aOpenFile_triggered();
+
+    void on_aSaveAll_triggered();
+
+    void on_aOpenFolder_triggered();
 
 private:
     Ui::MainWindow *ui;

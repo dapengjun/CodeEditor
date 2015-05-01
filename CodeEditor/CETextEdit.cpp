@@ -40,6 +40,20 @@ bool CETextEdit::save()
     return mFile.save();
 }
 
+bool CETextEdit::loadFile()
+{
+    int index;
+
+    mFile.loadFile();
+    mFile.setUntitled(false);
+    const QString &text = mFile.getText();
+    this->setText(text);
+    this->document()->setModified(false);
+    index = mTabWidget->indexOf(this);
+    mTabWidget->setTabText(index, mTabTitle);
+    return true;
+}
+
 QString &CETextEdit::getFileName()
 {
     return mFile.getFileName();

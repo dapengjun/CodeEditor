@@ -11,15 +11,16 @@ greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 TARGET = CodeEditor
 TEMPLATE = app
 
+INCLUDEPATH += $$PWD/common
 
 SOURCES += main.cpp\
         mainwindow.cpp \
-    CEFile.cpp \
-    CETextEdit.cpp
+    CETextEdit.cpp \
+    common/CEFile.cpp
 
 HEADERS  += mainwindow.h \
-    CEFile.h \
-    CETextEdit.h
+    CETextEdit.h \
+    common/CEFile.h
 
 FORMS    += mainwindow.ui
 

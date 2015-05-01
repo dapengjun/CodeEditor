@@ -78,3 +78,27 @@ bool CEFile::save()
     mFile = NULL;
     return true;
 }
+
+
+bool CEFile::loadFile()
+{
+    if (mFile)
+    {
+        mFile->close();
+        delete mFile;
+        mFile = NULL;
+    }
+    mFile = new QFile(mFileName);
+    if (!mFile->open(QFile::ReadOnly | QFile::Text))
+    {
+        delete mFile;
+        mFile = NULL;
+        return false;
+    }
+    QTextStream in(mFile);
+    mText = QString(in.readAll());
+    mFile->close();
+    delete mFile;
+    mFile = NULL;
+    return true;
+}
