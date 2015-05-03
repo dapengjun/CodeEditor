@@ -1,18 +1,11 @@
 #include "CEFile.h"
-#include <QMessageBox>
-#include <QPushButton>
-#include <QFileDialog>
-#include <QTextStream>
-#include <QTextCodec>
-#include <QObject>
-#include <iostream>
 
 CEFile::CEFile()
 {
     // 初始化文件为未保存状态
     mIsUntitled = true;
     // 初始化文件名为"未命名.txt"
-    mFileName = QObject::tr("untitled");
+    mFileName = "untitled";
     mFile = NULL;
 }
 
@@ -20,7 +13,7 @@ CEFile::~CEFile()
 {
     if (mFile)
     {
-        mFile->close();
+        mFile->close;
         delete mFile;
         mFile = NULL;
     }

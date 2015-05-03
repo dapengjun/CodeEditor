@@ -1,8 +1,9 @@
 #ifndef CEFILE_H
 #define CEFILE_H
 
-#include <QString>
-#include <QFile>
+#include <string>
+#include <iostream>
+#include <fstream>
 
 class CEFile
 {
@@ -13,21 +14,21 @@ public:
     bool save();      // 保存操作
     bool loadFile();
 
-    QString &getFileName();
-    void setFileName(QString &fileName);
+    string &getFileName();
+    void setFileName(string &fileName);
     bool isUntitled();
     void setUntitled(bool is);
-    QString &getText();
-    void setText(const QString &text);
+    string &getText();
+    void setText(const string &text);
 
 private:
     // 为真表示文件没有保存过，为假表示文件已经被保存过了
     bool mIsUntitled;
     // 保存当前文件的路径
-    QString mFileName;
-    QString mText;
+    string mFileName;
+    string mText;
 
-    QFile *mFile;
+    fstream *mFile;
 };
 
 #endif // CEFILE_H
