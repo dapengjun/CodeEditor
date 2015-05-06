@@ -35,7 +35,7 @@ bool CETextEdit::save()
 
     index = mTabWidget->indexOf(this);
     mTabWidget->setTabText(index, mTabTitle);
-    mFile.setText(text);
+    mFile.setText(text.toStdString());
     this->document()->setModified(false);
     return mFile.save();
 }
@@ -46,7 +46,8 @@ bool CETextEdit::loadFile()
 
     mFile.loadFile();
     mFile.setUntitled(false);
-    const QString &text = mFile.getText();
+    QString text;
+    text = text.fromStdString(mFile.getText());
     this->setText(text);
     this->document()->setModified(false);
     index = mTabWidget->indexOf(this);
@@ -56,13 +57,18 @@ bool CETextEdit::loadFile()
 
 QString &CETextEdit::getFileName()
 {
-    return mFile.getFileName();
+    static QString fileName;
+    fileName.clear();
+    fileName.fromStdString(mFile.getFileName());
+    return fileName;
 }
 
-void CETextEdit::setFileName(QString &fileName)
+void CETextEdit::setFileName(QString &fileNameQ)
 {
-    mFile.setFileName(fileName);
-    mTabTitle = QFileInfo(fileName).fileName();
+    string fileNameS;
+    fileNameS = fileNameQ.toStdString();
+    mFile.setFileName(fileNameS);
+    mTabTitle = QFileInfo(fileNameQ).fileName();
 }
 
 bool CETextEdit::isUntitled()

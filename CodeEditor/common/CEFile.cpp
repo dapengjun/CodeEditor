@@ -1,4 +1,7 @@
 #include "CEFile.h"
+#include <string.h>
+
+using namespace std;
 
 CEFile::CEFile()
 {
@@ -6,25 +9,22 @@ CEFile::CEFile()
     mIsUntitled = true;
     // 初始化文件名为"未命名.txt"
     mFileName = "untitled";
-    mFile = NULL;
 }
 
 CEFile::~CEFile()
 {
-    if (mFile)
+    if (mfs.is_open())
     {
-        mFile->close;
-        delete mFile;
-        mFile = NULL;
+        mfs.close();
     }
 }
 
-QString &CEFile::getFileName()
+string &CEFile::getFileName()
 {
     return this->mFileName;
 }
 
-void CEFile::setFileName(QString &fileName)
+void CEFile::setFileName(string &fileName)
 {
     this->mFileName = fileName;
 }
@@ -39,59 +39,52 @@ void CEFile::setUntitled(bool is)
     this->mIsUntitled = is;
 }
 
-QString &CEFile::getText()
+string &CEFile::getText()
 {
     return mText;
 }
 
-void CEFile::setText(const QString &text)
+void CEFile::setText(const string &text)
 {
     mText = text;
 }
 
 bool CEFile::save()
 {
-    if (mFile)
+    if (mfs.is_open())
     {
-        mFile->close();
-        delete mFile;
-        mFile = NULL;
+        mfs.close();
     }
-    mFile = new QFile(mFileName);
-    if (!mFile->open(QFile::WriteOnly | QFile::Text))
+    mfs.open(mFileName.c_str(), ios::trunc|ios::out);
+    if (!mfs.is_open())
     {
-        delete mFile;
-        mFile = NULL;
         return false;
     }
-    QTextStream out(mFile);
-    out << mText;
-    mFile->close();
-    delete mFile;
-    mFile = NULL;
+    mfs << mText;
+    mfs.close();
     return true;
 }
 
 
 bool CEFile::loadFile()
 {
-    if (mFile)
+    char buf[256];
+    if (mfs.is_open())
     {
-        mFile->close();
-        delete mFile;
-        mFile = NULL;
+        mfs.close();
     }
-    mFile = new QFile(mFileName);
-    if (!mFile->open(QFile::ReadOnly | QFile::Text))
+    mText.clear();
+    mfs.open(mFileName.c_str(), ios::in);
+    if (!mfs.is_open())
     {
-        delete mFile;
-        mFile = NULL;
         return false;
     }
-    QTextStream in(mFile);
-    mText = QString(in.readAll());
-    mFile->close();
-    delete mFile;
-    mFile = NULL;
+    if (!mfs.eof())
+    {
+        memset(buf, 0, sizeof(buf));
+        mfs.read(buf, sizeof(buf)-1);
+        mText.append(buf);
+    }
+    mfs.close();
     return true;
 }

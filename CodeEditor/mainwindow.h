@@ -6,6 +6,7 @@
 #include <QMap>
 #include <QTextEdit>
 #include <QCloseEvent>
+#include <QStandardItemModel>
 
 namespace Ui {
 class MainWindow;
@@ -56,7 +57,7 @@ private slots:
 
 private:
     Ui::MainWindow *ui;
-
+    QStandardItemModel mTvModel;
     QApplication *mApp;
 };
 

@@ -15,6 +15,7 @@ MainWindow::MainWindow(QWidget *parent) :
 //    fileName = "untitled";
 //    loadFile(fileName, true);
     ui->dockWidget->setVisible(false);
+    ui->treeView->setModel(&mTvModel);
 }
 
 MainWindow::~MainWindow()
@@ -244,5 +245,31 @@ void MainWindow::on_aSaveAll_triggered()
 
 void MainWindow::on_aOpenFolder_triggered()
 {
+    QString dir = QFileDialog::getExistingDirectory(this, tr("Open Directory"),
+                  "~", QFileDialog::ShowDirsOnly | QFileDialog::DontResolveSymlinks);
+    if (dir.isEmpty())
+    {
+        return;
+    }
+    mTvModel.clear();
+    mTvModel.setHeaderData(0, Qt::Horizontal, tr("No"));
+    mTvModel.setHeaderData(1, Qt::Horizontal, tr("name"));
+    mTvModel.setHeaderData(2, Qt::Horizontal, tr("value1"));
+    mTvModel.setHeaderData(3, Qt::Horizontal, tr("value2"));
 
+    QList<QStandardItem *> items;
+    QStandardItem *item = new QStandardItem(QString("project"));
+    items.push_back(item);
+    mTvModel.appendRow(items);
+
+    for (int i = 0; i < 4; ++i)
+    {
+        QList<QStandardItem *> childItems;
+
+        QStandardItem *item = new QStandardItem(QString("%0").arg(i));
+
+        childItems.push_back(item);
+        items.at(0)->appendRow(childItems);
+    }
+    this->ui->dockWidget->setVisible(true);
 }

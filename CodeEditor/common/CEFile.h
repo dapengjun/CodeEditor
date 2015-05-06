@@ -4,6 +4,8 @@
 #include <string>
 #include <iostream>
 #include <fstream>
+#include <string>
+using namespace std;
 
 class CEFile
 {
@@ -28,7 +30,7 @@ private:
     string mFileName;
     string mText;
 
-    fstream *mFile;
+    fstream mfs;
 };
 
 #endif // CEFILE_H
